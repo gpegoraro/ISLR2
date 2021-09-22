@@ -7,7 +7,9 @@ Code and solutions for Chapter 2 of the [Introduction to Statistical Learning](h
 
 ```{r load-packages}
 library(tidyverse)
+library(skimr)
 library(ggthemes)
+library(GGally)
 ```
 
 Set the palette and the running theme for ggplot2.
@@ -19,6 +21,45 @@ angle = -45,
 hjust = 0,
 vjust = 0.5
 ))
+```
+
+## Ex. 8
+
+Read the College data
+
+```{r}
+college <- read_csv("data/College.csv") %>%
+  rename(college = ...1) %>%
+  rename_with(~ tolower(gsub(".", "_", .x, fixed = TRUE)))
+
+glimpse(college)
+```
+```{r}
+college %>%
+  select(-college) %>%
+  skim()
+```
+```{r}
+college %>%
+  select(3:8) %>%
+  ggpairs()
+```
+```{r}
+college %>%
+  ggplot(aes(x = private, y = outstate)) +
+  geom_boxplot()
+```
+
+```{r}
+college <- college %>%
+  mutate(elite = ifelse(top10perc > 50, "Yes", "No"))
+
+glimpse(college)
+```
+
+```{r}
+college %>%
+  count(elite)
 ```
 
 Document the information about the analysis session
